@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 
 const wss = new WebSocket.Server({ port: 5000 });
 
-const clients: Record<string, WebSocket>  = {};
+const clients: Record<string, WebSocket> = {};
 
 wss.on('connection', (ws) => {
   const id = nanoid();
