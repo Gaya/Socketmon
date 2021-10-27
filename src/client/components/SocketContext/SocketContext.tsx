@@ -9,6 +9,8 @@ import useSocketContext, { SocketContextProps } from './useSocketContext';
 
 const defaultContext: SocketContextProps = {
   status: 'idle',
+  clients: [],
+  sockClients: [],
 };
 
 export const SocketContext = createContext<SocketContextProps>(defaultContext);
@@ -50,6 +52,10 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
 
               // send message to server for verification
               sendMessage({ type: 'CONNECT_SOCK', payload: { id: action.payload.id } });
+              break;
+            case 'BROADCAST_CLIENTS':
+              // update the state
+              actions.receiveClients(action.payload.clients, action.payload.sockClients);
               break;
             default: {
               console.info(`Unknown action ${action.type}`);

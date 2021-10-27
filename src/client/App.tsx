@@ -2,6 +2,7 @@ import { FunctionComponent } from 'preact';
 
 import SocketContextProvider from './components/SocketContext/SocketContext';
 import ServerStatus from './components/ServerStatus/ServerStatus';
+import Clients from './components/Clients/Clients';
 
 import './style.css';
 
@@ -14,6 +15,7 @@ const App: FunctionComponent = () => (
           <ServerStatus />
         </div>
       </div>
+      <Clients />;
     </div>
   </SocketContextProvider>
 );

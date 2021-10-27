@@ -4,6 +4,8 @@ export interface SocketContextProps {
   status: 'idle' | 'connected' | 'connecting' | 'error' | 'disconnected';
   id?: string;
   error?: Error;
+  clients: string[];
+  sockClients: string[];
 }
 
 interface ServerConnectAction {
@@ -32,8 +34,16 @@ interface ServerReceiveId {
   };
 }
 
+interface ServerReceiveClients {
+  type: 'RECEIVE_CLIENTS';
+  payload: {
+    clients: string[];
+    sockClients: string[];
+  };
+}
+
 type SocketContextActions = ServerConnectAction | ServerConnectSuccessAction
-  | ServerErrorAction | ServerDisconnectAction | ServerReceiveId;
+  | ServerErrorAction | ServerDisconnectAction | ServerReceiveId | ServerReceiveClients;
 
 interface UseSocketContextProps {
   value: SocketContextProps;
@@ -43,6 +53,7 @@ interface UseSocketContextProps {
     serverConnectSuccess: () => void;
     serverError: (error: Error) => void;
     receiveId: (id: string) => void;
+    receiveClients: (clients: string[], sockClients: string[]) => void;
   };
 }
 
@@ -76,6 +87,12 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
             ...state,
             id: action.payload.id,
           };
+        case 'RECEIVE_CLIENTS':
+          return {
+            ...state,
+            clients: action.payload.clients,
+            sockClients: action.payload.sockClients,
+          };
         default:
           return state;
       }
@@ -103,6 +120,10 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
     dispatch({ type: 'RECEIVE_ID', payload: { id } });
   }, []);
 
+  const receiveClients = useCallback((clients: string[], sockClients: string[]) => {
+    dispatch({ type: 'RECEIVE_CLIENTS', payload: { clients, sockClients } });
+  }, []);
+
   return {
     value,
     actions: {
@@ -111,6 +132,7 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
       serverConnectSuccess,
       serverError,
       receiveId,
+      receiveClients,
     },
   };
 }

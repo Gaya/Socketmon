@@ -68,6 +68,8 @@ wss.on('connection', (ws) => {
   });
 
   ws.on('close', () => {
+    console.info(`Disconnecting (${id})`);
+
     // remove client
     delete clients[id];
 
