@@ -30,6 +30,8 @@ wss.on('connection', (ws) => {
   const id = nanoid();
   clients[id] = ws;
 
+  console.info(`Connecting (${id})`);
+
   sendMessage(ws, {
     type: 'SOCK_CONNECTED',
     payload: {

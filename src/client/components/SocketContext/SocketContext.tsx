@@ -20,6 +20,8 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
   const socketRef = useRef<WebSocket>();
 
   useEffect(() => {
+    console.log(socketRef.current);
+
     if (value.status === 'idle') {
       actions.serverConnect();
 
@@ -65,6 +67,10 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
           // ignore parse error as we can skip these messages
         }
       };
+    }
+
+    if (value.status === 'disconnected') {
+      actions.serverReconnect();
     }
   }, [actions, value.status]);
 

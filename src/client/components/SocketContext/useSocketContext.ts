@@ -12,6 +12,10 @@ interface ServerConnectAction {
   type: 'SERVER_CONNECT',
 }
 
+interface ServerReconnectAction {
+  type: 'SERVER_RECONNECT',
+}
+
 interface ServerDisconnectAction {
   type: 'SERVER_DISCONNECT',
 }
@@ -42,13 +46,14 @@ interface ServerReceiveClients {
   };
 }
 
-type SocketContextActions = ServerConnectAction | ServerConnectSuccessAction
+type SocketContextActions = ServerConnectAction | ServerReconnectAction | ServerConnectSuccessAction
   | ServerErrorAction | ServerDisconnectAction | ServerReceiveId | ServerReceiveClients;
 
 interface UseSocketContextProps {
   value: SocketContextProps;
   actions: {
     serverConnect: () => void;
+    serverReconnect: () => void;
     serverDisconnect: () => void;
     serverConnectSuccess: () => void;
     serverError: (error: Error) => void;
@@ -65,6 +70,11 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
           return {
             ...state,
             status: 'connecting',
+          };
+        case 'SERVER_RECONNECT':
+          return {
+            ...state,
+            status: 'idle',
           };
         case 'SERVER_DISCONNECT':
           return {
@@ -104,6 +114,10 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
     dispatch({ type: 'SERVER_CONNECT' });
   }, []);
 
+  const serverReconnect = useCallback(() => {
+    dispatch({ type: 'SERVER_RECONNECT' });
+  }, []);
+
   const serverDisconnect = useCallback(() => {
     dispatch({ type: 'SERVER_DISCONNECT' });
   }, []);
@@ -128,6 +142,7 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
     value,
     actions: {
       serverConnect,
+      serverReconnect,
       serverDisconnect,
       serverConnectSuccess,
       serverError,
