@@ -1,6 +1,5 @@
 import { createContext, FunctionComponent } from 'preact';
-import { useEffect } from 'preact/compat';
-import WebSocket from 'ws';
+import { useEffect, useRef } from 'preact/compat';
 
 import getEnv from '../../helpers/getEnv';
 
@@ -10,28 +9,29 @@ const defaultContext: SocketContextProps = {
   status: 'idle',
 };
 
-const SocketContext = createContext<SocketContextProps>(defaultContext);
+export const SocketContext = createContext<SocketContextProps>(defaultContext);
 
 const SocketContextProvider: FunctionComponent = ({ children }) => {
   const { value, actions } = useSocketContext(defaultContext);
+  const socketRef = useRef<WebSocket>();
 
   useEffect(() => {
     if (value.status === 'idle') {
       actions.serverConnect();
 
-      const ws = new WebSocket(getEnv('SOCK_SERVER'));
+      socketRef.current = new WebSocket(getEnv('SOCK_SERVER'));
 
-      ws.on('open', () => {
+      socketRef.current.onopen = () => {
         actions.serverConnectSuccess();
-      });
+      };
 
-      ws.on('close', () => {
+      socketRef.current.onclose = () => {
         actions.serverDisconnect();
-      });
+      };
 
-      ws.on('error', (err) => {
-        actions.serverError(err);
-      });
+      socketRef.current.onerror = () => {
+        actions.serverError(new Error('Error happened on the server'));
+      };
     }
   }, [actions, value.status]);
 
