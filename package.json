@@ -1,0 +1,22 @@
+{
+  "name": "sock-in-the-middle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node -r ts-node/register -r dotenv/config src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "nanoid": "^3.1.30",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4",
+    "ws": "^8.2.3"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.2.0"
+  }
+}
