@@ -2,6 +2,7 @@ import { useCallback, useReducer } from 'preact/compat';
 
 export interface SocketContextProps {
   status: 'idle' | 'connected' | 'connecting' | 'error' | 'disconnected';
+  id?: string;
   error?: Error;
 }
 
@@ -24,8 +25,15 @@ interface ServerErrorAction {
   },
 }
 
+interface ServerReceiveId {
+  type: 'RECEIVE_ID',
+  payload: {
+    id: string;
+  };
+}
+
 type SocketContextActions = ServerConnectAction | ServerConnectSuccessAction
-  | ServerErrorAction | ServerDisconnectAction;
+  | ServerErrorAction | ServerDisconnectAction | ServerReceiveId;
 
 interface UseSocketContextProps {
   value: SocketContextProps;
@@ -34,6 +42,7 @@ interface UseSocketContextProps {
     serverDisconnect: () => void;
     serverConnectSuccess: () => void;
     serverError: (error: Error) => void;
+    receiveId: (id: string) => void;
   };
 }
 
@@ -62,6 +71,11 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
             status: 'error',
             error: action.payload.error,
           };
+        case 'RECEIVE_ID':
+          return {
+            ...state,
+            id: action.payload.id,
+          };
         default:
           return state;
       }
@@ -85,6 +99,10 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
     dispatch({ type: 'SERVER_ERROR', payload: { error } });
   }, []);
 
+  const receiveId = useCallback((id: string) => {
+    dispatch({ type: 'RECEIVE_ID', payload: { id } });
+  }, []);
+
   return {
     value,
     actions: {
@@ -92,6 +110,7 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
       serverDisconnect,
       serverConnectSuccess,
       serverError,
+      receiveId,
     },
   };
 }

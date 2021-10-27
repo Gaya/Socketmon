@@ -1,6 +1,8 @@
 import { createContext, FunctionComponent } from 'preact';
 import { useEffect, useRef } from 'preact/compat';
 
+import { OutMessage } from '../../../types/messages';
+
 import getEnv from '../../helpers/getEnv';
 
 import useSocketContext, { SocketContextProps } from './useSocketContext';
@@ -21,6 +23,10 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
 
       socketRef.current = new WebSocket(getEnv('SOCK_SERVER'));
 
+      const sendMessage = (message: OutMessage) => {
+        socketRef.current?.send(JSON.stringify(message));
+      };
+
       socketRef.current.onopen = () => {
         actions.serverConnectSuccess();
       };
@@ -31,6 +37,27 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
 
       socketRef.current.onerror = () => {
         actions.serverError(new Error('Error happened on the server'));
+      };
+
+      socketRef.current.onmessage = (ev) => {
+        try {
+          const action: OutMessage = JSON.parse(ev.data);
+
+          switch (action.type) {
+            case 'SOCK_CONNECTED':
+              // update state
+              actions.receiveId(action.payload.id);
+
+              // send message to server for verification
+              sendMessage({ type: 'CONNECT_SOCK', payload: { id: action.payload.id } });
+              break;
+            default: {
+              console.info(`Unknown action ${action.type}`);
+            }
+          }
+        } catch (e) {
+          // ignore parse error as we can skip these messages
+        }
       };
     }
   }, [actions, value.status]);
