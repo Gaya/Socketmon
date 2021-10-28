@@ -1,30 +1,25 @@
 import { FunctionComponent } from 'preact';
 import { useContext } from 'preact/compat';
+import { Flex, Text } from '@chakra-ui/react';
 
 import { SocketContext } from '../SocketContext/SocketContext';
 import Chip from '../Chip/Chip';
 import BoxList from '../BoxList/BoxList';
 
 const Clients: FunctionComponent = () => {
-  const { clients, sockClients, id } = useContext(SocketContext);
+  const { sockClients, id } = useContext(SocketContext);
 
   return (
-    <BoxList title="Connected Clients">
-      {clients.map((c) => (
-        <div key={c} className="py-2 px-3 flex justify-between">
-          <span>
+    <BoxList title="Sock Clients">
+      {sockClients.map((c) => (
+        <Flex w="100%" alignItems="center" justifyContent="space-between" key={c} px={3}>
+          <Text fontWeight={c === id ? 'medium' : 'normal'}>
             {c}
-          </span>
+          </Text>
           {c === id && (
             <Chip color="green" text="You" />
           )}
-          {c !== id && sockClients.indexOf(c) > -1 && (
-            <Chip color="blue" text="Sock" />
-          )}
-          {c !== id && sockClients.indexOf(c) === -1 && (
-            <Chip color="default" text="Client" />
-          )}
-        </div>
+        </Flex>
       ))}
     </BoxList>
   );

@@ -1,18 +1,21 @@
 import { FunctionComponent } from 'preact';
+import { Heading, Divider, VStack } from '@chakra-ui/react';
 
 interface BoxListProps {
   title: string;
 }
 
 const BoxList: FunctionComponent<BoxListProps> = ({ children, title }) => (
-  <div className="shadow overflow-hidden border-b border-gray-200 rounded-md divide-y divide-gray-200">
-    <h2 className="bg-gray-50 py-2 px-3 bg-gray-200 text-gray-700">
+  <VStack
+    w="100%"
+    align="flex-start"
+    divider={<Divider borderColor="gray.200" m={0} />}
+  >
+    <Heading as="h2" size="sm" px={3} py={2}>
       {title}
-    </h2>
-    <div className="bg-white divide-y divide-gray-200">
-      {children}
-    </div>
-  </div>
+    </Heading>
+    {children}
+  </VStack>
 );
 
 export default BoxList;

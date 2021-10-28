@@ -18,10 +18,9 @@ export const SocketContext = createContext<SocketContextProps>(defaultContext);
 const SocketContextProvider: FunctionComponent = ({ children }) => {
   const { value, actions } = useSocketContext(defaultContext);
   const socketRef = useRef<WebSocket>();
+  const cancelConnectionRef = useRef<number>(null);
 
   useEffect(() => {
-    console.log(socketRef.current);
-
     if (value.status === 'idle') {
       actions.serverConnect();
 
@@ -70,7 +69,14 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
     }
 
     if (value.status === 'disconnected') {
-      actions.serverReconnect();
+      if (cancelConnectionRef.current) {
+        window.clearTimeout(cancelConnectionRef.current);
+      }
+
+      cancelConnectionRef.current = window.setTimeout(() => {
+        actions.serverReconnect();
+        cancelConnectionRef.current = null;
+      }, 2000);
     }
   }, [actions, value.status]);
 
