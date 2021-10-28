@@ -10,6 +10,7 @@ const BoxList: FunctionComponent<BoxListProps> = ({ children, title }) => (
     w="100%"
     align="flex-start"
     divider={<Divider borderColor="gray.200" m={0} />}
+    pb={2}
   >
     <Heading as="h2" size="sm" px={3} py={2}>
       {title}

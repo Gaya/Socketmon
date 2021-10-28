@@ -27,7 +27,7 @@ function broadcastClients() {
 }
 
 wss.on('connection', (ws) => {
-  const id = nanoid();
+  const id = nanoid(8);
   clients[id] = ws;
 
   console.info(`Connecting (${id})`);

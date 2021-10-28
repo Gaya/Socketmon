@@ -24,7 +24,7 @@ const App: FunctionComponent = () => (
           <Flex flexGrow={1}>
             <Messages />
           </Flex>
-          <Flex flexGrow={0} w="sm" shadow="lg">
+          <Flex flexGrow={0} w="xs" shadow="lg" flexDirection="column" justifyContent="space-between">
             <Clients />
           </Flex>
         </Flex>
