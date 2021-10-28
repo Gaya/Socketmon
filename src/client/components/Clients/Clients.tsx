@@ -9,13 +9,14 @@ import Status from './Status';
 
 const Clients: FunctionComponent = () => {
   const {
-    clients,
     sockClients,
+    externalClients,
     id,
     status,
+    selectClient,
+    selectedClient,
+    deselectClient,
   } = useContext(SocketContext);
-
-  const externalClients = clients.filter((c) => sockClients.indexOf(c) === -1);
 
   return (
     <>
@@ -27,7 +28,25 @@ const Clients: FunctionComponent = () => {
           <Status>No connected clients yet.</Status>
         )}
         {externalClients.map((c) => (
-          <Flex w="100%" alignItems="center" justifyContent="space-between" key={c} px={3}>
+          <Flex
+            w="100%"
+            alignItems="center"
+            justifyContent="space-between"
+            key={c}
+            px={3}
+            py={2}
+            my={-2}
+            cursor="pointer"
+            bg={selectedClient === c ? 'gray.200' : 'white'}
+            onClick={() => {
+              if (selectedClient === c) {
+                deselectClient();
+              } else {
+                selectClient(c);
+              }
+            }}
+            _hover={{ bg: 'gray.100' }}
+          >
             <Text fontWeight={c === id ? 'medium' : 'normal'}>
               {c}
             </Text>

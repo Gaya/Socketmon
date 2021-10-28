@@ -10,11 +10,23 @@ const wss = new WebSocket.Server({ port: serverPort });
 const clients: Record<string, WebSocket> = {};
 const sockClients: Record<string, boolean> = {};
 
+function log(message: string): void {
+  // eslint-disable-next-line no-console
+  console.log(message);
+}
+
+function info(message: string): void {
+  // eslint-disable-next-line no-console
+  console.info(message);
+}
+
 function sendMessage(ws: WebSocket, obj: OutMessage) {
   ws.send(JSON.stringify(obj));
 }
 
 function broadcastClients() {
+  info('Broadcasting client list');
+
   Object.values(clients).forEach((ws) => {
     sendMessage(ws, {
       type: 'BROADCAST_CLIENTS',
@@ -30,7 +42,9 @@ wss.on('connection', (ws) => {
   const id = nanoid(8);
   clients[id] = ws;
 
-  console.info(`Connecting (${id})`);
+  info(`Connecting (${id})`);
+
+  broadcastClients();
 
   sendMessage(ws, {
     type: 'SOCK_CONNECTED',
@@ -51,7 +65,7 @@ wss.on('connection', (ws) => {
           }
           break;
         default:
-          console.info(`(${id}): Unknown action ${action.type}`);
+          info(`(${id}): Unknown action ${action.type}`);
       }
 
       // send updates
@@ -66,11 +80,11 @@ wss.on('connection', (ws) => {
     }
 
     // log message
-    console.log(`(${id}): ${message}`);
+    log(`(${id}): ${message}`);
   });
 
   ws.on('close', () => {
-    console.info(`Disconnecting (${id})`);
+    info(`Disconnecting (${id})`);
 
     // remove client
     delete clients[id];
@@ -84,4 +98,4 @@ wss.on('connection', (ws) => {
   });
 });
 
-console.info(`Server started on port ${serverPort}`);
+info(`Server started on port ${serverPort}`);

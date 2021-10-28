@@ -5,7 +5,7 @@ import { OutMessage } from '../../../types/messages';
 
 import getEnv from '../../helpers/getEnv';
 
-import useSocketContext, { SocketContextProps } from './useSocketContext';
+import useSocketContext, { SocketContextProps, SocketContextPropsAndCalculated } from './useSocketContext';
 
 const defaultContext: SocketContextProps = {
   status: 'idle',
@@ -13,7 +13,12 @@ const defaultContext: SocketContextProps = {
   sockClients: [],
 };
 
-export const SocketContext = createContext<SocketContextProps>(defaultContext);
+export const SocketContext = createContext<SocketContextPropsAndCalculated>({
+  ...defaultContext,
+  externalClients: [],
+  selectClient: () => undefined,
+  deselectClient: () => undefined,
+});
 
 const SocketContextProvider: FunctionComponent = ({ children }) => {
   const { value, actions } = useSocketContext(defaultContext);

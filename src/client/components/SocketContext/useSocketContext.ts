@@ -4,8 +4,18 @@ export interface SocketContextProps {
   status: 'idle' | 'connected' | 'connecting' | 'error' | 'disconnected';
   id?: string;
   error?: Error;
+  selectedClient?: string;
   clients: string[];
   sockClients: string[];
+}
+
+export interface SocketContextPropsAndCalculated extends SocketContextProps{
+  // calculated
+  externalClients: string[];
+
+  // actions
+  selectClient: (id: string) => void;
+  deselectClient: () => void;
 }
 
 interface ServerConnectAction {
@@ -46,11 +56,23 @@ interface ServerReceiveClients {
   };
 }
 
+interface ClientSelectAction {
+  type: 'SELECT_CLIENT',
+  payload: {
+    id: string;
+  };
+}
+
+interface ClientDeselectAction {
+  type: 'DESELECT_CLIENT',
+}
+
 type SocketContextActions = ServerConnectAction | ServerReconnectAction | ServerConnectSuccessAction
-  | ServerErrorAction | ServerDisconnectAction | ServerReceiveId | ServerReceiveClients;
+  | ServerErrorAction | ServerDisconnectAction | ServerReceiveId | ServerReceiveClients
+  | ClientSelectAction | ClientDeselectAction;
 
 interface UseSocketContextProps {
-  value: SocketContextProps;
+  value: SocketContextPropsAndCalculated;
   actions: {
     serverConnect: () => void;
     serverReconnect: () => void;
@@ -103,12 +125,24 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
             clients: action.payload.clients,
             sockClients: action.payload.sockClients,
           };
+        case 'SELECT_CLIENT':
+          return {
+            ...state,
+            selectedClient: action.payload.id,
+          };
+        case 'DESELECT_CLIENT':
+          return {
+            ...state,
+            selectedClient: undefined,
+          };
         default:
           return state;
       }
     },
     defaultContext,
   );
+
+  const externalClients = value.clients.filter((c) => value.sockClients.indexOf(c) === -1);
 
   const serverConnect = useCallback(() => {
     dispatch({ type: 'SERVER_CONNECT' });
@@ -138,8 +172,21 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
     dispatch({ type: 'RECEIVE_CLIENTS', payload: { clients, sockClients } });
   }, []);
 
+  const selectClient = useCallback((id: string) => {
+    dispatch({ type: 'SELECT_CLIENT', payload: { id } });
+  }, []);
+
+  const deselectClient = useCallback(() => {
+    dispatch({ type: 'DESELECT_CLIENT' });
+  }, []);
+
   return {
-    value,
+    value: {
+      ...value,
+      externalClients,
+      selectClient,
+      deselectClient,
+    },
     actions: {
       serverConnect,
       serverReconnect,

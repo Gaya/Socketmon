@@ -5,6 +5,7 @@ import SocketContextProvider from './components/SocketContext/SocketContext';
 import ServerStatus from './components/ServerStatus/ServerStatus';
 import Clients from './components/Clients/Clients';
 import Messages from './components/Messages/Messages';
+import SendMessage from './components/SendMessage/SendMessage';
 
 import theme from './helpers/theme';
 
@@ -21,8 +22,13 @@ const App: FunctionComponent = () => (
           </Flex>
         </Flex>
         <Flex flexGrow={1}>
-          <Flex flexGrow={1}>
-            <Messages />
+          <Flex flexGrow={1} flexDirection="column">
+            <Flex flexGrow={1}>
+              <Messages />
+            </Flex>
+            <Flex flexGrow={0}>
+              <SendMessage />
+            </Flex>
           </Flex>
           <Flex flexGrow={0} w="xs" shadow="lg" flexDirection="column" justifyContent="space-between">
             <Clients />
