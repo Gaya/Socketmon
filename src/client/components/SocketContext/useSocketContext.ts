@@ -114,6 +114,8 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
           return {
             ...state,
             status: 'disconnected',
+            clients: [],
+            sockClients: [],
           };
         case 'SERVER_CONNECT_SUCCESS':
           return {
@@ -205,7 +207,7 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
     dispatch({ type: 'DESELECT_CLIENT' });
   }, []);
 
-  const sentMessage = useCallback((from: string, destination: string, message: string ) => {
+  const sentMessage = useCallback((from: string, destination: string, message: string) => {
     dispatch({ type: 'SENT_MESSAGE', payload: { from, destination, message } });
   }, []);
 
