@@ -28,6 +28,20 @@ function sendPlainMessage(ws: WebSocket, message: string) {
   ws.send(message);
 }
 
+function sentMessage(from: string, destination: string, message: string) {
+  Object.keys(sockClients).forEach((key) => {
+    const ws = clients[key];
+    sendMessage(ws, {
+      type: 'SENT_MESSAGE',
+      payload: {
+        from,
+        destination,
+        message,
+      },
+    });
+  });
+}
+
 function broadcastClients() {
   info('Broadcasting client list');
 
@@ -54,6 +68,7 @@ function handleMessageSend(destination: string, message: string) {
 
     if (dest) {
       sendPlainMessage(dest, message);
+      sentMessage('server', receiver, message);
     }
   });
 }
@@ -93,7 +108,8 @@ wss.on('connection', (ws) => {
           info(`(${id}): Unknown action ${action.type}`);
       }
     } catch (e) {
-      // silence catch
+      // when it's a plain message
+      sentMessage(id, 'server', message);
     }
 
     // log message

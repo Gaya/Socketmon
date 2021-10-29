@@ -7,6 +7,7 @@ export interface SocketContextProps {
   selectedClient?: string;
   clients: string[];
   sockClients: string[];
+  messages: { d: Date; from: string; destination: string; message: string; }[];
 }
 
 export interface SocketContextPropsAndCalculated extends SocketContextProps{
@@ -68,9 +69,18 @@ interface ClientDeselectAction {
   type: 'DESELECT_CLIENT',
 }
 
+interface ServerSentMessage {
+  type: 'SENT_MESSAGE',
+  payload: {
+    from: string;
+    destination: string;
+    message: string;
+  };
+}
+
 type SocketContextActions = ServerConnectAction | ServerReconnectAction | ServerConnectSuccessAction
   | ServerErrorAction | ServerDisconnectAction | ServerReceiveId | ServerReceiveClients
-  | ClientSelectAction | ClientDeselectAction;
+  | ClientSelectAction | ClientDeselectAction | ServerSentMessage;
 
 interface UseSocketContextProps {
   value: SocketContextPropsAndCalculated;
@@ -82,6 +92,7 @@ interface UseSocketContextProps {
     serverError: (error: Error) => void;
     receiveId: (id: string) => void;
     receiveClients: (clients: string[], sockClients: string[]) => void;
+    sentMessage: (from: string, destination: string, message: string) => void;
   };
 }
 
@@ -136,6 +147,19 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
             ...state,
             selectedClient: undefined,
           };
+        case 'SENT_MESSAGE':
+          return {
+            ...state,
+            messages: [
+              ...state.messages,
+              {
+                d: new Date(),
+                from: action.payload.from,
+                destination: action.payload.destination,
+                message: action.payload.message,
+              },
+            ],
+          };
         default:
           return state;
       }
@@ -181,6 +205,10 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
     dispatch({ type: 'DESELECT_CLIENT' });
   }, []);
 
+  const sentMessage = useCallback((from: string, destination: string, message: string ) => {
+    dispatch({ type: 'SENT_MESSAGE', payload: { from, destination, message } });
+  }, []);
+
   return {
     value: {
       ...value,
@@ -197,6 +225,7 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
       serverError,
       receiveId,
       receiveClients,
+      sentMessage,
     },
   };
 }

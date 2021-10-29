@@ -31,6 +31,7 @@ interface SendMessage {
 interface SentMessage {
   type: 'SENT_MESSAGE',
   payload: {
+    from: string;
     destination: string;
     message: string;
   };

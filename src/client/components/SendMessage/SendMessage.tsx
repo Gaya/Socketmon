@@ -34,6 +34,7 @@ const SendMessage: FunctionComponent = () => {
 
     if (message !== '') {
       sendMessage(selected || 'all', message);
+      setMessage('');
     }
   }, [message, selected, sendMessage]);
 

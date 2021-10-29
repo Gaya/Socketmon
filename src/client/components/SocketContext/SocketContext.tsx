@@ -11,6 +11,7 @@ const defaultContext: SocketContextProps = {
   status: 'idle',
   clients: [],
   sockClients: [],
+  messages: [],
 };
 
 export const SocketContext = createContext<SocketContextPropsAndCalculated>({
@@ -63,6 +64,13 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
             case 'BROADCAST_CLIENTS':
               // update the state
               actions.receiveClients(action.payload.clients, action.payload.sockClients);
+              break;
+            case 'SENT_MESSAGE':
+              actions.sentMessage(
+                action.payload.from,
+                action.payload.destination,
+                action.payload.message,
+              );
               break;
             default: {
               console.info(`Unknown action ${action.type}`);
