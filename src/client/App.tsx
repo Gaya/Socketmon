@@ -17,7 +17,7 @@ const App: FunctionComponent = () => (
       <Flex flexDirection="column" flexGrow={1} height="100vh">
         <Flex flexGrow={0} p={4} px={6} bg="gray.700" textColor="gray.50">
           <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
-            <Heading as="h1" size="md">Sock in the Middle</Heading>
+            <Heading as="h1" size="md">Socketmon</Heading>
             <ServerStatus />
           </Flex>
         </Flex>

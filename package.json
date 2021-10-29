@@ -1,6 +1,6 @@
 {
-  "name": "sock-in-the-middle",
-  "version": "1.0.0",
+  "name": "socketmon",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
