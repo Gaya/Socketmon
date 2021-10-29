@@ -24,10 +24,16 @@ function sendMessage(ws: WebSocket, obj: OutMessage) {
   ws.send(JSON.stringify(obj));
 }
 
+function sendPlainMessage(ws: WebSocket, message: string) {
+  ws.send(message);
+}
+
 function broadcastClients() {
   info('Broadcasting client list');
 
-  Object.values(clients).forEach((ws) => {
+  Object.keys(sockClients).forEach((key) => {
+    const ws = clients[key];
+
     sendMessage(ws, {
       type: 'BROADCAST_CLIENTS',
       payload: {
@@ -35,6 +41,20 @@ function broadcastClients() {
         sockClients: Object.keys(sockClients),
       },
     });
+  });
+}
+
+function handleMessageSend(destination: string, message: string) {
+  const clientKeys = Object.keys(clients);
+  const externalClients = clientKeys.filter((c) => !sockClients[c]);
+  const receivers = destination === 'all' ? externalClients : [destination];
+
+  receivers.forEach((receiver) => {
+    const dest = clients[receiver];
+
+    if (dest) {
+      sendPlainMessage(dest, message);
+    }
   });
 }
 
@@ -59,21 +79,18 @@ wss.on('connection', (ws) => {
 
       // handle message
       switch (action.type) {
+        case 'SEND_MESSAGE':
+          handleMessageSend(action.payload.destination, action.payload.message);
+          break;
         case 'CONNECT_SOCK':
           if (action.payload.id === id) {
             sockClients[id] = true;
           }
-          break;
-        default:
-          info(`(${id}): Unknown action ${action.type}`);
-      }
 
-      // send updates
-      switch (action.type) {
-        case 'CONNECT_SOCK':
           broadcastClients();
           break;
         default:
+          info(`(${id}): Unknown action ${action.type}`);
       }
     } catch (e) {
       // silence catch

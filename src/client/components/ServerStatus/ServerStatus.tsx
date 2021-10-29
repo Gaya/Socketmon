@@ -1,8 +1,8 @@
 import { FunctionComponent } from 'preact';
 import { useContext, useMemo } from 'preact/compat';
+import { Badge } from '@chakra-ui/react';
 
 import { SocketContext } from '../SocketContext/SocketContext';
-import Chip from '../Chip/Chip';
 
 const ServerStatus: FunctionComponent = () => {
   const { status } = useContext(SocketContext);
@@ -23,7 +23,9 @@ const ServerStatus: FunctionComponent = () => {
   }, [status]);
 
   return (
-    <Chip text={status} color={color} />
+    <Badge colorScheme={color}>
+      {status}
+    </Badge>
   );
 };
 

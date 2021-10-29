@@ -17,7 +17,7 @@ import {
 import { SocketContext } from '../SocketContext/SocketContext';
 
 const SendMessage: FunctionComponent = () => {
-  const { externalClients, selectedClient } = useContext(SocketContext);
+  const { externalClients, selectedClient, sendMessage } = useContext(SocketContext);
   const [selected, setSelected] = useState<string>();
   const [message, setMessage] = useState<string>('');
 
@@ -32,8 +32,10 @@ const SendMessage: FunctionComponent = () => {
   const handleSubmit = useCallback((e: Event) => {
     e.preventDefault();
 
-    console.log('submit');
-  }, []);
+    if (message !== '') {
+      sendMessage(selected || 'all', message);
+    }
+  }, [message, selected, sendMessage]);
 
   return (
     <form style={{ width: '100%' }} onSubmit={handleSubmit}>

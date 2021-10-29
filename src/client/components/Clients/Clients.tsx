@@ -1,9 +1,8 @@
 import { FunctionComponent } from 'preact';
 import { useContext } from 'preact/compat';
-import { Flex, Text } from '@chakra-ui/react';
+import { Badge, Flex, Text } from '@chakra-ui/react';
 
 import { SocketContext } from '../SocketContext/SocketContext';
-import Chip from '../Chip/Chip';
 import BoxList from '../BoxList/BoxList';
 import Status from './Status';
 
@@ -63,7 +62,9 @@ const Clients: FunctionComponent = () => {
               {c}
             </Text>
             {c === id && (
-              <Chip color="green" text="You" />
+              <Badge colorScheme="green">
+                You
+              </Badge>
             )}
           </Flex>
         ))}

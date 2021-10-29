@@ -20,4 +20,20 @@ interface BroadcastClients {
   }
 }
 
-export type OutMessage = SockConnected | ConnectSock | BroadcastClients;
+interface SendMessage {
+  type: 'SEND_MESSAGE',
+  payload: {
+    destination: string;
+    message: string;
+  };
+}
+
+interface SentMessage {
+  type: 'SENT_MESSAGE',
+  payload: {
+    destination: string;
+    message: string;
+  };
+}
+
+export type OutMessage = SockConnected | ConnectSock | BroadcastClients | SendMessage | SentMessage;

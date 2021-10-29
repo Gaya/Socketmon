@@ -1,5 +1,5 @@
 import { createContext, FunctionComponent } from 'preact';
-import { useEffect, useRef } from 'preact/compat';
+import { useCallback, useEffect, useRef } from 'preact/compat';
 
 import { OutMessage } from '../../../types/messages';
 
@@ -18,6 +18,7 @@ export const SocketContext = createContext<SocketContextPropsAndCalculated>({
   externalClients: [],
   selectClient: () => undefined,
   deselectClient: () => undefined,
+  sendMessage: () => undefined,
 });
 
 const SocketContextProvider: FunctionComponent = ({ children }) => {
@@ -25,15 +26,15 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
   const socketRef = useRef<WebSocket>();
   const cancelConnectionRef = useRef<number>(null);
 
+  const sendMessageToServer = useCallback((message: OutMessage) => {
+    socketRef.current?.send(JSON.stringify(message));
+  }, []);
+
   useEffect(() => {
     if (value.status === 'idle') {
       actions.serverConnect();
 
       socketRef.current = new WebSocket(getEnv('SOCK_SERVER'));
-
-      const sendMessage = (message: OutMessage) => {
-        socketRef.current?.send(JSON.stringify(message));
-      };
 
       socketRef.current.onopen = () => {
         actions.serverConnectSuccess();
@@ -57,7 +58,7 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
               actions.receiveId(action.payload.id);
 
               // send message to server for verification
-              sendMessage({ type: 'CONNECT_SOCK', payload: { id: action.payload.id } });
+              sendMessageToServer({ type: 'CONNECT_SOCK', payload: { id: action.payload.id } });
               break;
             case 'BROADCAST_CLIENTS':
               // update the state
@@ -74,6 +75,8 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
     }
 
     if (value.status === 'disconnected') {
+      actions.receiveClients([], []);
+
       if (cancelConnectionRef.current) {
         window.clearTimeout(cancelConnectionRef.current);
       }
@@ -83,10 +86,25 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
         cancelConnectionRef.current = null;
       }, 2000);
     }
-  }, [actions, value.status]);
+  }, [actions, sendMessageToServer, value.status]);
+
+  const sendMessage = useCallback((destination: string, message: string) => {
+    sendMessageToServer({
+      type: 'SEND_MESSAGE',
+      payload: {
+        destination,
+        message,
+      },
+    });
+  }, [sendMessageToServer]);
 
   return (
-    <SocketContext.Provider value={value}>
+    <SocketContext.Provider
+      value={{
+        ...value,
+        sendMessage,
+      }}
+    >
       {children}
     </SocketContext.Provider>
   );

@@ -16,6 +16,7 @@ export interface SocketContextPropsAndCalculated extends SocketContextProps{
   // actions
   selectClient: (id: string) => void;
   deselectClient: () => void;
+  sendMessage: (destination: string, message: string) => void;
 }
 
 interface ServerConnectAction {
@@ -186,6 +187,7 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
       externalClients,
       selectClient,
       deselectClient,
+      sendMessage: () => undefined,
     },
     actions: {
       serverConnect,
