@@ -17,9 +17,16 @@ import {
 import { SocketContext } from '../SocketContext/SocketContext';
 
 const SendMessage: FunctionComponent = () => {
-  const { externalClients, selectedClient, sendMessage } = useContext(SocketContext);
+  const {
+    externalClients,
+    selectedClient,
+    sendMessage,
+    status,
+  } = useContext(SocketContext);
   const [selected, setSelected] = useState<string>();
   const [message, setMessage] = useState<string>('');
+
+  const isEnabled = status === 'connected';
 
   useEffect(() => {
     if (selectedClient) {
@@ -32,11 +39,11 @@ const SendMessage: FunctionComponent = () => {
   const handleSubmit = useCallback((e: Event) => {
     e.preventDefault();
 
-    if (message !== '') {
+    if (isEnabled && message !== '') {
       sendMessage(selected || 'all', message);
       setMessage('');
     }
-  }, [message, selected, sendMessage]);
+  }, [isEnabled, message, selected, sendMessage]);
 
   return (
     <form style={{ width: '100%' }} onSubmit={handleSubmit}>
@@ -51,6 +58,7 @@ const SendMessage: FunctionComponent = () => {
             bg="white"
             w="xs"
             maxWidth={150}
+            isDisabled={!isEnabled}
             onChange={(event: Event) => setSelected((event.target as HTMLSelectElement).value)}
           >
             <option value="all">All</option>
@@ -62,6 +70,7 @@ const SendMessage: FunctionComponent = () => {
             display="block"
             mx={3}
             flexGrow={1}
+            isDisabled={!isEnabled}
             type="text"
             placeholder="Send message..."
             bg="white"
@@ -69,7 +78,7 @@ const SendMessage: FunctionComponent = () => {
             value={message}
             onChange={(event: Event) => setMessage((event.target as HTMLInputElement).value)}
           />
-          <Button colorScheme="blue" flexShrink={0} type="submit">
+          <Button colorScheme="blue" flexShrink={0} type="submit" isDisabled={!isEnabled}>
             Send
           </Button>
         </FormControl>

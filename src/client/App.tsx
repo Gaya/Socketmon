@@ -6,6 +6,7 @@ import ServerStatus from './components/ServerStatus/ServerStatus';
 import Clients from './components/Clients/Clients';
 import Messages from './components/Messages/Messages';
 import SendMessage from './components/SendMessage/SendMessage';
+import Logo from './components/Logo/Logo';
 
 import theme from './helpers/theme';
 
@@ -17,7 +18,7 @@ const App: FunctionComponent = () => (
       <Flex flexDirection="column" flexGrow={1} height="100vh">
         <Flex flexGrow={0} p={4} px={6} bg="gray.700" textColor="gray.50">
           <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
-            <Heading as="h1" size="md">Socketmon</Heading>
+            <Logo />
             <ServerStatus />
           </Flex>
         </Flex>

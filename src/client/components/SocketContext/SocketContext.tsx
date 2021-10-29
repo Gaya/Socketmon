@@ -25,7 +25,6 @@ export const SocketContext = createContext<SocketContextPropsAndCalculated>({
 const SocketContextProvider: FunctionComponent = ({ children }) => {
   const { value, actions } = useSocketContext(defaultContext);
   const socketRef = useRef<WebSocket>();
-  const cancelConnectionRef = useRef<number>(null);
 
   const sendMessageToServer = useCallback((message: OutMessage) => {
     socketRef.current?.send(JSON.stringify(message));
@@ -83,14 +82,7 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
     }
 
     if (value.status === 'disconnected') {
-      actions.receiveClients([], []);
-
-      if (!cancelConnectionRef.current) {
-        cancelConnectionRef.current = window.setTimeout(() => {
-          actions.serverReconnect();
-          cancelConnectionRef.current = null;
-        }, 1000);
-      }
+      actions.serverReconnect();
     }
   }, [actions, sendMessageToServer, value.status]);
 
