@@ -50,7 +50,7 @@ const SendMessage: FunctionComponent = () => {
             flexGrow={0}
             bg="white"
             w="xs"
-            maxWidth={130}
+            maxWidth={150}
             onChange={(event: Event) => setSelected((event.target as HTMLSelectElement).value)}
           >
             <option value="all">All</option>

@@ -151,13 +151,13 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
           return {
             ...state,
             messages: [
-              ...state.messages,
               {
                 d: new Date(),
                 from: action.payload.from,
                 destination: action.payload.destination,
                 message: action.payload.message,
               },
+              ...state.messages,
             ],
           };
         default:

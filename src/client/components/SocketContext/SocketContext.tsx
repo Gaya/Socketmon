@@ -85,14 +85,12 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
     if (value.status === 'disconnected') {
       actions.receiveClients([], []);
 
-      if (cancelConnectionRef.current) {
-        window.clearTimeout(cancelConnectionRef.current);
+      if (!cancelConnectionRef.current) {
+        cancelConnectionRef.current = window.setTimeout(() => {
+          actions.serverReconnect();
+          cancelConnectionRef.current = null;
+        }, 1000);
       }
-
-      cancelConnectionRef.current = window.setTimeout(() => {
-        actions.serverReconnect();
-        cancelConnectionRef.current = null;
-      }, 2000);
     }
   }, [actions, sendMessageToServer, value.status]);
 

@@ -14,16 +14,16 @@ import './style.css';
 const App: FunctionComponent = () => (
   <SocketContextProvider>
     <ChakraProvider theme={theme}>
-      <Flex flexDirection="column" flexGrow={1} minH="100vh">
+      <Flex flexDirection="column" flexGrow={1} height="100vh">
         <Flex flexGrow={0} p={4} px={6} bg="gray.700" textColor="gray.50">
           <Flex flexGrow={1} justifyContent="space-between" alignItems="center">
             <Heading as="h1" size="md">Sock in the Middle</Heading>
             <ServerStatus />
           </Flex>
         </Flex>
-        <Flex flexGrow={1}>
+        <Flex flexGrow={1} height="calc(100vh - 56px)">
           <Flex flexGrow={1} flexDirection="column">
-            <Flex flexGrow={1}>
+            <Flex flexGrow={1} overflow="scroll">
               <Messages />
             </Flex>
             <Flex flexGrow={0}>

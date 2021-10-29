@@ -31,6 +31,7 @@ function sendPlainMessage(ws: WebSocket, message: string) {
 function sentMessage(from: string, destination: string, message: string) {
   Object.keys(sockClients).forEach((key) => {
     const ws = clients[key];
+
     sendMessage(ws, {
       type: 'SENT_MESSAGE',
       payload: {
@@ -109,7 +110,7 @@ wss.on('connection', (ws) => {
       }
     } catch (e) {
       // when it's a plain message
-      sentMessage(id, 'server', message);
+      sentMessage(id, 'server', message.toString());
     }
 
     // log message
