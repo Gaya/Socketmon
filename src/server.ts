@@ -83,18 +83,19 @@ wss.on('connection', (ws, req) => {
   broadcastClients();
 
   const { origin } = req.headers;
+  const isSockClient = process.env.CLIENT_HOST && (origin || '').indexOf(process.env.CLIENT_HOST) > -1;
 
   ws.on('message', (message: string) => {
-    try {
-      const action: OutMessage = JSON.parse(message);
+    if (isSockClient) {
+      try {
+        const action: OutMessage = JSON.parse(message);
 
-      // handle message
-      switch (action.type) {
-        case 'SEND_MESSAGE':
-          handleMessageSend(action.payload.destination, action.payload.message);
-          break;
-        case 'CONNECT_SOCK':
-          if (process.env.CLIENT_HOST && (origin || '').indexOf(process.env.CLIENT_HOST) > -1) {
+        // handle message
+        switch (action.type) {
+          case 'SEND_MESSAGE':
+            handleMessageSend(action.payload.destination, action.payload.message);
+            break;
+          case 'CONNECT_SOCK':
             sendMessage(ws, {
               type: 'SOCK_CONNECTED',
               payload: {
@@ -105,20 +106,21 @@ wss.on('connection', (ws, req) => {
             sockClients[id] = true;
 
             broadcastClients();
-          }
-          break;
-        case 'CONNECT_SOCK_CONFIRM':
-          if (action.payload.id !== id) {
-            sockClients[id] = false;
-          }
+            break;
+          case 'CONNECT_SOCK_CONFIRM':
+            if (action.payload.id !== id) {
+              sockClients[id] = false;
+            }
 
-          broadcastClients();
-          break;
-        default:
-          info(`(${id}): Unknown action ${action.type}`);
+            broadcastClients();
+            break;
+          default:
+            info(`(${id}): Unknown action ${action.type}`);
+        }
+      } catch (e) {
+        // fail silently
       }
-    } catch (e) {
-      // when it's a plain message
+    } else {
       sentMessage(id, 'server', message.toString());
     }
 
