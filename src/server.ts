@@ -101,11 +101,15 @@ wss.on('connection', (ws, req) => {
                 id,
               },
             });
+
+            sockClients[id] = true;
+
+            broadcastClients();
           }
           break;
         case 'CONNECT_SOCK_CONFIRM':
-          if (action.payload.id === id) {
-            sockClients[id] = true;
+          if (action.payload.id !== id) {
+            sockClients[id] = false;
           }
 
           broadcastClients();
