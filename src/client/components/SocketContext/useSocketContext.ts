@@ -32,10 +32,6 @@ interface ServerDisconnectAction {
   type: 'SERVER_DISCONNECT',
 }
 
-interface ServerConnectSuccessAction {
-  type: 'SERVER_CONNECT_SUCCESS',
-}
-
 interface ServerErrorAction {
   type: 'SERVER_ERROR',
   payload: {
@@ -78,9 +74,9 @@ interface ServerSentMessage {
   };
 }
 
-type SocketContextActions = ServerConnectAction | ServerReconnectAction | ServerConnectSuccessAction
-  | ServerErrorAction | ServerDisconnectAction | ServerReceiveId | ServerReceiveClients
-  | ClientSelectAction | ClientDeselectAction | ServerSentMessage;
+type SocketContextActions = ServerConnectAction | ServerReconnectAction | ServerErrorAction
+  | ServerDisconnectAction | ServerReceiveId | ServerReceiveClients | ClientSelectAction
+  | ClientDeselectAction | ServerSentMessage;
 
 interface UseSocketContextProps {
   value: SocketContextPropsAndCalculated;
@@ -88,7 +84,6 @@ interface UseSocketContextProps {
     serverConnect: () => void;
     serverReconnect: () => void;
     serverDisconnect: () => void;
-    serverConnectSuccess: () => void;
     serverError: (error: Error) => void;
     receiveId: (id: string) => void;
     receiveClients: (clients: string[], sockClients: string[]) => void;
@@ -117,11 +112,6 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
             clients: [],
             sockClients: [],
           };
-        case 'SERVER_CONNECT_SUCCESS':
-          return {
-            ...state,
-            status: 'connected',
-          };
         case 'SERVER_ERROR':
           return {
             ...state,
@@ -131,6 +121,7 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
         case 'RECEIVE_ID':
           return {
             ...state,
+            status: 'connected',
             id: action.payload.id,
           };
         case 'RECEIVE_CLIENTS':
@@ -183,10 +174,6 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
     dispatch({ type: 'SERVER_DISCONNECT' });
   }, []);
 
-  const serverConnectSuccess = useCallback(() => {
-    dispatch({ type: 'SERVER_CONNECT_SUCCESS' });
-  }, []);
-
   const serverError = useCallback((error: Error) => {
     dispatch({ type: 'SERVER_ERROR', payload: { error } });
   }, []);
@@ -223,7 +210,6 @@ function useSocketContext(defaultContext: SocketContextProps): UseSocketContextP
       serverConnect,
       serverReconnect,
       serverDisconnect,
-      serverConnectSuccess,
       serverError,
       receiveId,
       receiveClients,

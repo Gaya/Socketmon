@@ -37,7 +37,7 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
       socketRef.current = new WebSocket(getEnv('SOCK_SERVER'));
 
       socketRef.current.onopen = () => {
-        actions.serverConnectSuccess();
+        sendMessageToServer({ type: 'CONNECT_SOCK' });
       };
 
       socketRef.current.onclose = () => {
@@ -58,7 +58,7 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
               actions.receiveId(action.payload.id);
 
               // send message to server for verification
-              sendMessageToServer({ type: 'CONNECT_SOCK', payload: { id: action.payload.id } });
+              sendMessageToServer({ type: 'CONNECT_SOCK_CONFIRM', payload: { id: action.payload.id } });
               break;
             case 'BROADCAST_CLIENTS':
               // update the state
@@ -72,6 +72,7 @@ const SocketContextProvider: FunctionComponent = ({ children }) => {
               );
               break;
             default: {
+              // eslint-disable-next-line no-console
               console.info(`Unknown action ${action.type}`);
             }
           }

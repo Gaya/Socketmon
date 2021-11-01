@@ -82,13 +82,6 @@ wss.on('connection', (ws) => {
 
   broadcastClients();
 
-  sendMessage(ws, {
-    type: 'SOCK_CONNECTED',
-    payload: {
-      id,
-    },
-  });
-
   ws.on('message', (message: string) => {
     try {
       const action: OutMessage = JSON.parse(message);
@@ -99,6 +92,14 @@ wss.on('connection', (ws) => {
           handleMessageSend(action.payload.destination, action.payload.message);
           break;
         case 'CONNECT_SOCK':
+          sendMessage(ws, {
+            type: 'SOCK_CONNECTED',
+            payload: {
+              id,
+            },
+          });
+          break;
+        case 'CONNECT_SOCK_CONFIRM':
           if (action.payload.id === id) {
             sockClients[id] = true;
           }

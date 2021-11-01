@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { ChakraProvider, Flex, Heading } from '@chakra-ui/react';
+import { ChakraProvider, Flex } from '@chakra-ui/react';
 
 import SocketContextProvider from './components/SocketContext/SocketContext';
 import ServerStatus from './components/ServerStatus/ServerStatus';

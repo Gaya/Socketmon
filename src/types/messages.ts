@@ -1,27 +1,31 @@
 interface SockConnected {
-  type: 'SOCK_CONNECTED',
+  type: 'SOCK_CONNECTED';
   payload: {
     id: string;
   };
 }
 
 interface ConnectSock {
-  type: 'CONNECT_SOCK',
+  type: 'CONNECT_SOCK';
+}
+
+interface ConnectSockConfirm {
+  type: 'CONNECT_SOCK_CONFIRM',
   payload: {
     id: string;
   };
 }
 
 interface BroadcastClients {
-  type: 'BROADCAST_CLIENTS',
+  type: 'BROADCAST_CLIENTS';
   payload: {
     clients: string[];
     sockClients: string[];
-  }
+  };
 }
 
 interface SendMessage {
-  type: 'SEND_MESSAGE',
+  type: 'SEND_MESSAGE';
   payload: {
     destination: string;
     message: string;
@@ -29,7 +33,7 @@ interface SendMessage {
 }
 
 interface SentMessage {
-  type: 'SENT_MESSAGE',
+  type: 'SENT_MESSAGE';
   payload: {
     from: string;
     destination: string;
@@ -37,4 +41,5 @@ interface SentMessage {
   };
 }
 
-export type OutMessage = SockConnected | ConnectSock | BroadcastClients | SendMessage | SentMessage;
+export type OutMessage = SockConnected | ConnectSock | ConnectSockConfirm | BroadcastClients
+  | SendMessage | SentMessage;
