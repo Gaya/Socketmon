@@ -74,13 +74,15 @@ function handleMessageSend(destination: string, message: string) {
   });
 }
 
-wss.on('connection', (ws) => {
+wss.on('connection', (ws, req) => {
   const id = nanoid(8);
   clients[id] = ws;
 
   info(`Connecting (${id})`);
 
   broadcastClients();
+
+  const { origin } = req.headers;
 
   ws.on('message', (message: string) => {
     try {
@@ -92,12 +94,14 @@ wss.on('connection', (ws) => {
           handleMessageSend(action.payload.destination, action.payload.message);
           break;
         case 'CONNECT_SOCK':
-          sendMessage(ws, {
-            type: 'SOCK_CONNECTED',
-            payload: {
-              id,
-            },
-          });
+          if (process.env.CLIENT_HOST && (origin || '').indexOf(process.env.CLIENT_HOST) > -1) {
+            sendMessage(ws, {
+              type: 'SOCK_CONNECTED',
+              payload: {
+                id,
+              },
+            });
+          }
           break;
         case 'CONNECT_SOCK_CONFIRM':
           if (action.payload.id === id) {
