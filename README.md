@@ -4,7 +4,7 @@
 A WebSocket monitoring tool for inspecting and sending WebSocket messages to connected clients.
 
 <p align="center">
-    <img src="public/assets/socketmon-logo.png" alt="Socketmon" />
+    <img src="https://github.com/Gaya/Socketmon/raw/main/public/assets/socketmon-logo.png" alt="Socketmon" />
 </p>
 
 ## Installation and usage
@@ -27,7 +27,7 @@ The client for monitoring and sending messages is located at `http://localhost:6
 
 ## Socketmon in action
 
-![Example screen](public/assets/socketmon-screenshot.jpg)
+![Example screen](https://github.com/Gaya/Socketmon/raw/main/public/assets/socketmon-screenshot.jpg)
 
 ## What does it do?
 
