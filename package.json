@@ -7,8 +7,7 @@
     "socketmon": "bin/socketmon"
   },
   "scripts": {
-    "start": "npm run start:server",
-    "start:server": "node -r dotenv/config -r ts-node/register src/server/server.ts",
+    "start": "node -r dotenv/config -r ts-node/register src/server/server.ts --without-static",
     "build": "react-scripts build",
     "dev": "react-scripts start",
     "lint": "eslint src",
