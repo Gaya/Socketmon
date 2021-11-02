@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'preact';
+import { FunctionComponent } from 'react';
 
 import logo from './socketmon-logo.png';
 

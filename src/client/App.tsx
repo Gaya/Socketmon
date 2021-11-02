@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'preact';
+import { FunctionComponent } from 'react';
 import { ChakraProvider, Flex } from '@chakra-ui/react';
 
 import SocketContextProvider from './components/SocketContext/SocketContext';
@@ -9,8 +9,6 @@ import SendMessage from './components/SendMessage/SendMessage';
 import Logo from './components/Logo/Logo';
 
 import theme from './helpers/theme';
-
-import './style.css';
 
 const App: FunctionComponent = () => (
   <SocketContextProvider>

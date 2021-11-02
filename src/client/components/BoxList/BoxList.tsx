@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'preact';
+import { FunctionComponent } from 'react';
 import { Heading, Divider, VStack } from '@chakra-ui/react';
 
 interface BoxListProps {

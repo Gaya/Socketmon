@@ -1,10 +1,11 @@
-import { FunctionComponent } from 'preact';
 import {
+  FormEvent,
+  FunctionComponent,
   useCallback,
   useContext,
   useEffect,
   useState,
-} from 'preact/compat';
+} from 'react';
 import {
   Button,
   Flex,
@@ -36,7 +37,7 @@ const SendMessage: FunctionComponent = () => {
     }
   }, [selectedClient]);
 
-  const handleSubmit = useCallback((e: Event) => {
+  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isEnabled && message !== '') {
@@ -59,7 +60,7 @@ const SendMessage: FunctionComponent = () => {
             w="xs"
             maxWidth={150}
             isDisabled={!isEnabled}
-            onChange={(event: Event) => setSelected((event.target as HTMLSelectElement).value)}
+            onChange={(event) => setSelected(event.target.value)}
           >
             <option value="all">All</option>
             {externalClients.map((c) => (
@@ -74,9 +75,8 @@ const SendMessage: FunctionComponent = () => {
             type="text"
             placeholder="Send message..."
             bg="white"
-            isFullWidth
             value={message}
-            onChange={(event: Event) => setMessage((event.target as HTMLInputElement).value)}
+            onChange={(event) => setMessage(event.target.value)}
           />
           <Button colorScheme="blue" flexShrink={0} type="submit" isDisabled={!isEnabled}>
             Send

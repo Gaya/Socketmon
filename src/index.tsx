@@ -1,7 +1,11 @@
-import { FunctionComponent } from 'preact';
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom';
 
 import App from './client/App';
 
-const Root: FunctionComponent = () => <App />;
-
-export default Root;
+ReactDOM.render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+  document.getElementById('root'),
+);

@@ -1,5 +1,10 @@
-import { createContext, FunctionComponent } from 'preact';
-import { useCallback, useEffect, useRef } from 'preact/compat';
+import {
+  createContext,
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
 
 import { OutMessage } from '../../../types/messages';
 

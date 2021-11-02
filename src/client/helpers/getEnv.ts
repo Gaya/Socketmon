@@ -1,5 +1,5 @@
 function getEnv(name: string, fallback?: string): string {
-  const value = process.env[`PREACT_APP_${name}`];
+  const value = process.env[`REACT_APP_${name}`];
 
   if (typeof value === 'undefined') {
     if (typeof fallback !== 'undefined') {

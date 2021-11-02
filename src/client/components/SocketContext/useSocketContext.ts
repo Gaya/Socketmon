@@ -1,4 +1,4 @@
-import { useCallback, useReducer } from 'preact/compat';
+import { useCallback, useReducer } from 'react';
 
 export interface SocketContextProps {
   status: 'idle' | 'connected' | 'connecting' | 'error' | 'disconnected';
@@ -92,8 +92,8 @@ interface UseSocketContextProps {
 }
 
 function useSocketContext(defaultContext: SocketContextProps): UseSocketContextProps {
-  const [value, dispatch] = useReducer<SocketContextProps, SocketContextActions>(
-    (state, action) => {
+  const [value, dispatch] = useReducer(
+    (state: SocketContextProps, action: SocketContextActions): SocketContextProps => {
       switch (action.type) {
         case 'SERVER_CONNECT':
           return {

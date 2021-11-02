@@ -1,5 +1,4 @@
-import { FunctionComponent } from 'preact';
-import { useContext, useMemo } from 'preact/compat';
+import { FunctionComponent, useContext, useMemo } from 'react';
 import { Badge } from '@chakra-ui/react';
 
 import { SocketContext } from '../SocketContext/SocketContext';

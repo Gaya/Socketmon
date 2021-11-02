@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'preact';
+import { FunctionComponent } from 'react';
 import { Flex, Text } from '@chakra-ui/react';
 
 const Status: FunctionComponent = ({ children }) => (

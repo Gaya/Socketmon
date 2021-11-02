@@ -1,5 +1,4 @@
-import { FunctionComponent } from 'preact';
-import { useContext } from 'preact/compat';
+import { FunctionComponent, useContext } from 'react';
 import { Divider, VStack } from '@chakra-ui/react';
 
 import { SocketContext } from '../SocketContext/SocketContext';

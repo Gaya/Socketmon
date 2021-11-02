@@ -1,9 +1,10 @@
 import WebSocket from 'ws';
 import { nanoid } from 'nanoid';
 
-import { OutMessage } from './types/messages';
+import { OutMessage } from '../types/messages';
 
 const serverPort = parseInt(process.env.SERVER_PORT || '5000', 10);
+const clientHost = process.env.CLIENT_HOST || 'localhost:8080';
 
 const wss = new WebSocket.Server({ port: serverPort });
 
@@ -83,7 +84,7 @@ wss.on('connection', (ws, req) => {
   broadcastClients();
 
   const { origin } = req.headers;
-  const isSockClient = process.env.CLIENT_HOST && (origin || '').indexOf(process.env.CLIENT_HOST) > -1;
+  const isSockClient = (origin || '').indexOf(clientHost) > -1;
 
   ws.on('message', (message: string) => {
     if (isSockClient) {
