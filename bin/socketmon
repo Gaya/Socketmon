@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+require('dotenv').config({
+  path: `${__dirname}/../.env`,
+});
+require('ts-node').register({
+  project: `${__dirname}/../node.tsconfig.json`,
+});
+
+require('../src/server/server');

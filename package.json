@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "description": "",
   "main": "src/server/server.ts",
+  "bin": {
+    "socketmon": "bin/socketmon"
+  },
   "scripts": {
-    "start": "npm run start:server -- --with-static",
+    "start": "npm run start:server",
     "start:server": "node -r dotenv/config -r ts-node/register src/server/server.ts",
     "build": "react-scripts build",
     "dev": "react-scripts start",
@@ -12,11 +15,12 @@
     "prepublish": "npm run build"
   },
   "files": [
-    "./src/server",
-    "./node.tsconfig.json",
-    "./tsconfig.json",
-    "./package.json",
-    "./build"
+    "src/server",
+    "build",
+    "bin",
+    ".env",
+    "node.tsconfig.json",
+    "tsconfig.json"
   ],
   "keywords": [],
   "author": "CleverNode, Gaya Kessler",

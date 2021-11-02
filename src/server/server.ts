@@ -4,10 +4,10 @@ import express from 'express';
 
 import { OutMessage } from '../types/messages';
 
-const serverPort = parseInt(process.env.SERVER_PORT || '5000', 10);
-const clientHost = process.env.CLIENT_HOST || 'localhost:8080';
-const clientPort = process.env.PORT || '8080';
-const staticServer = process.argv.includes('--with-static');
+const serverPort = parseInt(process.env.SERVER_PORT || '6868', 10);
+const clientHost = process.env.CLIENT_HOST || 'localhost:6767';
+const clientPort = process.env.PORT || '6767';
+const noStaticServer = process.argv.includes('--without-static');
 
 const wss = new WebSocket.Server({ port: serverPort });
 
@@ -149,7 +149,7 @@ wss.on('connection', (ws, req) => {
 
 info(`WebSocket server started on port ${serverPort}`);
 
-if (staticServer) {
+if (!noStaticServer) {
   const app = express();
 
   app.use(express.static(`${__dirname}/../../build`));
