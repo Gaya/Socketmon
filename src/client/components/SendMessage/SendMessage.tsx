@@ -73,6 +73,7 @@ const SendMessage: FunctionComponent = () => {
             flexGrow={1}
             isDisabled={!isEnabled}
             type="text"
+            fontFamily="monospace"
             placeholder="Send message..."
             bg="white"
             value={message}

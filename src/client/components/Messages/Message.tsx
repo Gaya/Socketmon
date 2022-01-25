@@ -19,12 +19,12 @@ const Message: FunctionComponent<MessageProps> = ({
   return (
     <Flex px={3} py={1} flexDirection="column">
       <Flex alignItems="center">
-        <Text textColor="gray.500" width={155}>{date}</Text>
+        <Text textColor="gray.500" whiteSpace="nowrap">{date}</Text>
         <Badge mx={2}>{from}</Badge>
         <Text fontSize={10}>❯</Text>
         <Badge mx={2}>{destination}</Badge>
       </Flex>
-      <Text my={2}>{message}</Text>
+      <Text my={2} fontFamily="monospace">{message}</Text>
     </Flex>
   );
 };
